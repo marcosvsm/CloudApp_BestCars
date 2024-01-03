@@ -140,3 +140,5 @@ server/djangoapp/migrations/
 *.pyc
 server/djangoapp/migrations/
 
+functions/node_modules/
+functions/package-lock.json

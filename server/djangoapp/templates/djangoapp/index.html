@@ -1,70 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Dealership Review</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <link href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css" rel="stylesheet">
+    <link
+      href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css"
+      rel="stylesheet"
+    />
     <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+  </head>
 
-</head>
+  <body>
+    <!--Add a nav bar here -->
 
-<body class="h-100">
-    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-        <nav class="navbar navbar-expand-lg navbar-light bh-light">
-            <div class="container d-flex flex-wrap">
-                <div>
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item px-2">
-                            <a class="nav-link" href="{% url 'bestCars:index' %}">Home</a>
-                        </li>
-                        <li class="nav-item px-2">
-                            <a class="nav-link" href="about">About</a>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <ul class="nav navbar-nav navbar-right">
-                    {% if user.is_authenticated %}
-                        <li>
-                            <a class="btn btn-link" href="#">{{ user.first_name }}{{user.username}}</a>
-                        </li>
-                        <li>
-                            <a class="btn btn-link" href="{% url 'bestCars:logout' %}">Logout</a>
-                        </li>
-                    {% else %}
-                        <li>
-                            <form class="form-inline" action="{% url 'bestCars:login' %}" method="POST">
-                                {% csrf_token %}
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Username" name="username">
-                                    <input type="password" class="form-control" placeholder="Password" name="password">
-                                    <button class="btn btn-primary" type="submit">Login</button>
-                                    <a class="btn btn-link" href="{% url 'bestCars:signup' %}">Sign Up</a>
-                                </div>
-                            </form>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-    <!--Add a dealer table here -->
-        <div class="container mt-auto">
-           
+    <nav class="navbar navbar-light bg-light">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href={% url 'djangoapp:index' %}>Best Dealer</a>
         </div>
+        <ul class="nav navbar-nav navbar-right">
+          {% if user.is_authenticated %}
+          <li>
+            <a class="btn btn-link" href="about">About</a>
+            <a class="btn btn-link" href="contact">Contact</a>
 
-        <footer class="mt-auto">
-            <div class="container">
-                <a href="contact">Contact us</a>
-            </div>
-        </footer>
-    </div>
-</body>
-
+            <a class="btn btn-link" href="logout">Logout</a>
+          </li>
+          {% else %}
+          <li>
+            <form
+              action="{% url 'djangoapp:login'%}"
+              class="form-inline"
+              method="post"
+            >
+              {% csrf_token %}
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Username"
+                  name="username"
+                />
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="Password"
+                  name="psw"
+                />
+                <button class="btn btn-primary" type="submit">Login</button>
+                <a class="btn btn-link" href="{% url 'djangoapp:registration'%}"
+                  >Sign Up</a
+                >
+              </div>
+            </form>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+    <script>
+      $(function () {
+        $('#table').bootstrapTable();
+      });
+    </script>
+    <table class="table" id="table" data-filter-control="true">
+      <thead>
+        <tr>
+          <th data-field="id">ID</th>
+          <th data-field="name">Dealer Name</th>
+          <th data-field="city">City</th>
+          <th data-field="address">Address</th>
+          <th data-field="zip">Zip</th>
+          <th data-field="state" data-filter-control="select">State</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for dealer in dealership_list %}
+        <tr>
+          <td>{{dealer.id}}</td>
+          <td>
+            <a href="{% url 'djangoapp:dealer_details' dealer.id %}"
+              >{{dealer.full_name}}</a
+            >
+          </td>
+          <td>{{dealer.city}}</td>
+          <td>{{dealer.address}}</td>
+          <td>{{dealer.zip}}</td>
+          <td>{{dealer.st}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
 </html>

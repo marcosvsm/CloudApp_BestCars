@@ -1,18 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Dealership Review</title>
     {% load static %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+  </head>
 
-    <body>
+  <body>
+    <nav class="navbar navbar-light bg-light">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href={% url 'djangoapp:index' %}>Best Dealer</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          {% if user.is_authenticated %}
+          <li>
+            <a class="btn btn-link" href="about">About</a>
+            <a class="btn btn-link" href="contact">Contact</a>
 
-    <!--Add a nav bar here -->
-
+            <a class="btn btn-link" href="logout">Logout</a>
+            {% if dealer_id %}
+            <a
+              class="btn btn-link"
+              href="{% url 'djangoapp:add_review' dealer_id %}"
+              >Add Review</a
+            >
+            {% endif %}
+          </li>
+          {% else %}
+          <li>
+            <form
+              action="{% url 'djangoapp:login'%}"
+              class="form-inline"
+              method="post"
+            >
+              {% csrf_token %}
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Username"
+                  name="username"
+                />
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="Password"
+                  name="psw"
+                />
+                <button class="btn btn-primary" type="submit">Login</button>
+                <a class="btn btn-link" href="{% url 'djangoapp:registration'%}"
+                  >Sign Up</a
+                >
+              </div>
+            </form>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
     <!-- Add reviews as cards -->
-
-    </body>
-
+    <div class="container">
+      <h2 class="m-2">Reviews for {{dealer.full_name}}</h2>
+      <div class="row">
+        {% for review in reviews %}
+  
+        <div class="card col-3 m-2">
+          {% if review.sentiment == "positive"%}
+          <img class="card-img-left" src="{{MEDIA_URL}}emoji/positive.png"  width="36px" height="36px" />
+          {% elif review.sentiment == "neutral" %}
+          <img class="card-img-left" src="{{MEDIA_URL}}emoji/neutral.png"  width="36px" height="36px" />
+          {% elif review.sentiment == "negative" %}
+          <img class="card-img-left" src="{{MEDIA_URL}}emoji/negative.png"  width="36px" height="36px" />
+          {%else %}
+          <img class="card-img-left" src="{{MEDIA_URL}}emoji/neutral.png"  width="36px" height="36px" />
+          {% endif %}
+  
+          <div class="card-body">
+            <h5 class="card-title">{{ review.car_model }}</h5>
+  
+            <h6 class="card-subtitle mb-2 text-muted">{{ review.car_make }}</h6>
+  
+            <p class="card-text">{{ review.review }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </body>
 </html>

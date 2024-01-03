@@ -13,7 +13,7 @@ class CarMake(models.Model):
     name = models.CharField(null=False, max_length=40)
     description = models.CharField(null=False, max_length=200)
     def __str__(self):
-        return self
+        return self.name
 
 
 # <HINT> Create a Car Model model `class CarModel(models.Model):`:
@@ -31,7 +31,7 @@ class CarModel(models.Model):
     year = models.DateField()
     dealerId = models.IntegerField()
     def __str__(self):
-        return self
+        return self.name
 
 
 
@@ -49,6 +49,42 @@ class CarDealer:
         self.zip = zip
 
     def __str__(self):
-        return "Dealer name: "+ self.full_name
+        return self.full_name
 
 # <HINT> Create a plain Python class `DealerReview` to hold review data
+class DealerReview:
+    def __init__(
+        self,
+        dealership,
+        name,
+        purchase,
+        review,
+        purchase_date,
+        car_make,
+        car_model,
+        car_year,
+        sentiment,
+        id=None,
+    ):
+        self.id = id
+        self.dealership = dealership
+        self.name = name
+        self.purchase = purchase
+        self.review = review
+        self.purchase_date = purchase_date
+        self.car_make = car_make
+        self.car_model = car_model
+        self.car_year = car_year
+        self.sentiment = sentiment
+
+    def __str__(self):
+        return (
+            "Review: "
+            + str(self.review)
+            + ","
+            + "Sentiment: "
+            + str(self.sentiment)
+            + ","
+            + "Purchase: "
+            + str(self.purchase)
+        )
